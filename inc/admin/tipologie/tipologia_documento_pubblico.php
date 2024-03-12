@@ -197,6 +197,53 @@ function dci_add_documento_pubblico_metaboxes()
             'remove_text' => __('Rimuovi', 'design_comuni_italia'), // default: "Remove"
         ),
     ));
+	
+	$cmb_ulteriori_allegati = $cmb_documento->add_field(array(
+    'id'          => $prefix . 'ulteriori_allegati',
+    'type'        => 'group',
+    'description' => __('Aggiungi ulteriori allegati con titolo, descrizione e file', 'design_comuni_italia'),
+    'options'     => array(
+        'group_title'       => __('Allegato {#}', 'design_comuni_italia'), // {#} gets replaced by row number
+        'add_button'        => __('Aggiungi un altro allegato', 'design_comuni_italia'),
+        'remove_button'     => __('Rimuovi allegato', 'design_comuni_italia'),
+        'sortable'          => true,
+        // 'closed'         => true, // true to have the groups closed by default
+    ),
+));
+
+$cmb_documento->add_group_field($cmb_ulteriori_allegati, array(
+    'id'   => 'titolo',
+    'name' => __('Titolo dell\'allegato', 'design_comuni_italia'),
+    'type' => 'text',
+));
+
+$cmb_documento->add_group_field($cmb_ulteriori_allegati, array(
+    'id'   => 'descrizione',
+    'name' => __('Descrizione dell\'allegato', 'design_comuni_italia'),
+    'description' => __('Massimo 120 caratteri.', 'design_comuni_italia'),
+    'type' => 'text',
+    'attributes' => array(
+        'maxlength'  => '120',
+        'style'      => 'width: 100%',
+    ),
+));
+
+// Aggiunge il campo per il caricamento del file PDF
+$cmb_documento->add_group_field($cmb_ulteriori_allegati, array(
+    'id'   => 'file_allegato',
+    'name' => __('Carica file allegato', 'design_comuni_italia'),
+    'type' => 'file',
+    // Permette solo il caricamento di file PDF
+    'query_args' => array(
+        'type' => 'application/pdf',
+    ),
+    'text' => array(
+        'add_upload_file_text' => __('Carica file', 'design_comuni_italia'), // Modifica il testo del pulsante di caricamento
+        'remove_image_text' => __('Rimuovi file', 'design_comuni_italia'), // Modifica il testo per la rimozione del file
+        'remove_text' => __('Rimuovi', 'design_comuni_italia'), // Testo standard per la rimozione
+    ),
+));
+	
 
 
 
