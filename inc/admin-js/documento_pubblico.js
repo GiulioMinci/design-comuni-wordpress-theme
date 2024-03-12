@@ -91,6 +91,3 @@ function dci_remove_highlight_alternative_field(fieldClass) {
     jQuery(fieldClass).removeClass("highlighted_alternative_field");
     jQuery('.field-alternative-msg').remove();
 }
-
-
-
