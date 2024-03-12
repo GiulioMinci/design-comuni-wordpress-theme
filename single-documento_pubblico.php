@@ -41,11 +41,21 @@ get_header();
 			$paragrafi_extra = get_post_meta($post->ID, '_dci_documento_pubblico_paragrafi_extra', true);
 			$pdf_url = generate_pdf_from_page_content(get_the_content(), get_the_title());
 
+			$post_id = get_the_ID();
+
+			$prefix = '_dci_documento_pubblico_';
+
+			$ulteriori_allegati = get_post_meta($post_id, $prefix . 'ulteriori_allegati', true);
+		
+		
             ?>
+		
+		
             <div class="container" id="main-container">
                 <div class="row">
                     <div class="col px-lg-4">
                         <?php get_template_part("template-parts/common/breadcrumb"); ?>
+	
                     </div>
                 </div>
                 <div class="row">
@@ -265,71 +275,90 @@ get_header();
 								?>
 							
 							
-<section id="documento" class="it-page-section mb-5">
-    <h4>Documento</h4>
-    <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
-        <?php if (!empty($file_documento)) { ?>
-        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
-            <svg class="icon" aria-hidden="true">
-                <use xlink:href="#it-clip"></use>
-            </svg>
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a class="text-decoration-none" href="<?php echo $file_documento; ?>">
-                        Documento allegato
-                    </a>
-                </h5>
-            </div>
-        </div>
-        <?php } ?>
+								<section id="documento" class="it-page-section mb-5" style="padding-top: 15px;">
+									<h4>Documento</h4>
+									<div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
+										<?php if (!empty($file_documento)) { ?>
+										<div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
+											<svg class="icon" aria-hidden="true">
+												<use xlink:href="#it-clip"></use>
+											</svg>
+											<div class="card-body">
+												<h5 class="card-title">
+													<a class="text-decoration-none" href="<?php echo $file_documento; ?>">
+														Documento allegato
+													</a>
+												</h5>
+											</div>
+										</div>
+										<?php } ?>
 
-        <?php if (!empty($url_documento)) { ?>
-        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
-            <svg class="icon" aria-hidden="true">
-                <use xlink:href="#it-clip"></use>
-            </svg>
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a class="text-decoration-none" href="<?php echo $url_documento; ?>">
-                        Vedi il documento online
-                    </a>
-                </h5>
-            </div>
-        </div>
-        <?php } ?>
+										<?php if (!empty($url_documento)) { ?>
+										<div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
+											<svg class="icon" aria-hidden="true">
+												<use xlink:href="#it-clip"></use>
+											</svg>
+											<div class="card-body">
+												<h5 class="card-title">
+													<a class="text-decoration-none" href="<?php echo $url_documento; ?>">
+														Vedi il documento online
+													</a>
+												</h5>
+											</div>
+										</div>
+										<?php } ?>
 
-        <?php if (!empty($pdf_url)) { ?>
-        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
-            <svg class="icon" aria-hidden="true">
-                <use xlink:href="#it-file"></use>
-            </svg>
-            <div class="card-body">
-                <h5 class="card-title">
-                    <a class="text-decoration-none" href="<?php echo $pdf_url; ?>">
-                        Il contenuto di questa pagina in pdf
-                    </a>
-                </h5>
-            </div>
-        </div>
-        <?php } ?>
-    </div><!-- ./card-wrapper -->
-</section>
+										<?php if (!empty($pdf_url)) { ?>
+										<div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
+											<svg class="icon" aria-hidden="true">
+												<use xlink:href="#it-file"></use>
+											</svg>
+											<div class="card-body">
+												<h5 class="card-title">
+													<a class="text-decoration-none" href="<?php echo $pdf_url; ?>">
+														Il contenuto di questa pagina in pdf
+													</a>
+												</h5>
+											</div>
+										</div>
+										<?php } ?>
+									</div><!-- ./card-wrapper -->
+								</section>
 							
 							
-							
+									<section id="ulteriori-allegati" class="it-page-section mb-5" style="padding-top: 15px;">
+										<?php if (!empty($ulteriori_allegati)) : ?>
+											<h4>Ulteriori Allegati</h4>
+											<div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
+												<?php foreach ($ulteriori_allegati as $allegato) : ?>
+													<div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light">
+														<svg class="icon" aria-hidden="true">
+															<use xlink:href="#it-file"></use>
+														</svg>
+														<div class="card-body">
+															<?php if (!empty($allegato['file_allegato'])) : ?>
+																<h5 class="card-title">
+																	<a class="text-decoration-none" href="<?php echo esc_url($allegato['file_allegato']); ?>" target="_blank">
+																		<?php echo esc_html($allegato['titolo'] ?? 'Titolo non disponibile'); ?>
+																	</a>
+																</h5>
+															<?php endif; ?>
+															<?php if (!empty($allegato['descrizione'])) : ?>
+																<p class="card-text">
+																	<?php echo esc_html($allegato['descrizione']); ?>
+																</p>
+															<?php endif; ?>
+														</div>
+													</div>
+												<?php endforeach; ?>
+											</div>
+										<?php endif; ?>
+									</section>
 							
 							
 							
 
-                            <section id="ufficio_responsabile" class="it-page-section mb-5">
-                                <h4>Ufficio responsabile</h4>
-                                <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
-                                    <?php foreach ($ufficio_responsabile as $uo_id) {
-                                        $with_border = true;
-                                        get_template_part("template-parts/unita-organizzativa/card");
-                                    } ?>
-                                </div>
-                            </section>
+
 
                             <?php if ($autori &&  is_array($autori) && count($autori)) { ?>
                             <section id="autore" class="it-page-section mb-5">
@@ -396,7 +425,18 @@ get_header();
 										</table>
 									</div>
 								</div>
-
+							
+                            <section id="ufficio_responsabile" class="it-page-section mb-5">
+                                <h4>Ufficio responsabile</h4>
+                                <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
+                                    <?php foreach ($ufficio_responsabile as $uo_id) {
+                                        $with_border = true;
+                                        get_template_part("template-parts/unita-organizzativa/card");
+                                    } ?>
+                                </div>
+                            </section>
+							
+							
                             <?php if ( $more_info ) {  ?>
                             <section id="ulteriori_informazioni" class="it-page-section mb-5">
                                 <h4>Ulteriori informazioni</h4>
@@ -454,9 +494,6 @@ get_header();
         const descText = document.querySelector('#descrizione')?.closest('article').innerText;
         const wordsNumber = descText.split(' ').length
         document.querySelector('#readingTime').innerHTML = `${Math.ceil(wordsNumber / 200)} min`;
-    </script>
-<?php
-get_footer();
     </script>
 <?php
 get_footer();
