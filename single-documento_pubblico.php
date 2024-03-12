@@ -38,6 +38,9 @@ get_header();
             $more_info = dci_get_wysiwyg_field("ulteriori_informazioni");
             $riferimenti_normativi = dci_get_wysiwyg_field("riferimenti_normativi"); 			
             $documenti_collegati = dci_get_meta("documenti_collegati");
+			$paragrafi_extra = get_post_meta($post->ID, '_dci_documento_pubblico_paragrafi_extra', true);
+			$pdf_url = generate_pdf_from_page_content(get_the_content(), get_the_title());
+
             ?>
             <div class="container" id="main-container">
                 <div class="row">
@@ -102,13 +105,30 @@ get_header();
                                                                     </a>
                                                                 </li>
                                                                 <?php } ?>
-
+														
+																
+																 <!-- Aggiunta dinamici dei paragrafi extra al menu -->
+                                                                <?php foreach ($paragrafi_extra as $index => $paragrafo) {
+                                                                    // Accedi al valore del titolo del paragrafo e al suo ID
+                                                                    $titolo = $paragrafo['_dci_documento_pubblico_titolo-paragrafo-extra'];
+                                                                    $id = 'paragrafo_extra_' . sanitize_title($titolo); // ID univoco del paragrafo extra
+                                                                ?>
+                                                                    <!-- Stampa della voce di menu per il titolo corrente con l'attributo href contenente l'ID del paragrafo -->
+                                                                    <li class="nav-item">
+                                                                        <a class="nav-link" href="#<?php echo $id; ?>">
+                                                                            <span class="title-medium"><?php echo ucwords($titolo); ?></span>
+                                                                        </a>
+                                                                    </li>
+                                                                <?php } ?>
+																
+																
                                                                 <?php if( $url_documento || $file_documento ) { ?>
                                                                 <li class="nav-item">
                                                                     <a class="nav-link" href="#documento">
                                                                         <span class="title-medium">Documento</span>
                                                                     </a>
                                                                 </li>
+																
                                                                 <?php } ?>
 
                                                                 <li class="nav-item">
@@ -211,54 +231,88 @@ get_header();
                                 <h4>Descrizione</h4>
                                 <div class="richtext-wrapper lora">
                                     <?php echo $descrizione; ?>
+									
 							                  </div>
                             </section>
+							
                             <?php } ?>
+							
+							
+							
+								<!-- Aggiungi il contenuto dei paragrafi extra -->
+								<?php if (!empty($paragrafi_extra)) {
+									foreach ($paragrafi_extra as $index => $paragrafo) {
+										// Ottieni il titolo e il testo del paragrafo extra
+										$titolo = $paragrafo['_dci_documento_pubblico_titolo-paragrafo-extra'];
+										$testo = $paragrafo['_dci_documento_pubblico_corpo-paragrafo-extra'];
 
-                            <?php if( $url_documento || $file_documento ) { ?>
-                            <section id="documento" class="it-page-section mb-5">
-                                <h4>Documento</h4>
-                                <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
-                                <?php
-                                    if ( $file_documento ) {
-                                        $documento_id = attachment_url_to_postid($file_documento);
-                                        $documento = get_post($documento_id);
-                                        ?>
-                                        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
-                                            <svg class="icon" aria-hidden="true">
-                                                <use
-                                                    xlink:href="#it-clip"
-                                                ></use>
-                                            </svg>
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    <a class="text-decoration-none" href="<?php echo $file_documento; ?>" aria-label="Scarica il documento <?php echo $documento->post_title; ?>" title="Scarica il documento <?php echo $documento->post_title; ?>">
-                                                        <?php echo $documento->post_title; ?> (<?php echo getFileSizeAndFormat($file_documento);?>)
-                                                    </a>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    <?php }
+										// Assicurati che il titolo non sia vuoto
+										if (!empty($titolo)) {
+											// Capitalizza la prima lettera del titolo
+											$titolo = ucfirst($titolo);
+								?>
+											<section id="paragrafo_extra_<?php echo sanitize_title($titolo); ?>" class="pt-4">
+												<h4 class="section-title"><?php echo $titolo; ?></h4>
+												<?php 
+												// Stampa il testo del paragrafo
+												echo $testo;
+												?>
+											</section>
+								<?php
+										}
+									}
+								}
+								?>
+							
+							
+<?php if ($url_documento || $file_documento) { ?>
+<section id="documento" class="it-page-section mb-5">
+    <h4>Documento</h4>
+    <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
+    <?php
+        if ($file_documento) {
+    ?>
+        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#it-clip"></use>
+            </svg>
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a class="text-decoration-none" href="<?php echo $file_documento; ?>">
+                        Documento allegato
+                    </a>
+                </h5>
+            </div>
+        </div>
+    <?php 
+        }
+        if ($url_documento) {
+    ?>
+        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#it-clip"></use>
+            </svg>
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a class="text-decoration-none" href="<?php echo $url_documento; ?>">
+                        Vedi il documento online
+                    </a>
+                </h5>
+            </div>
+        </div>
+    <?php 
+        }
+    ?>
+    </div><!-- ./card-wrapper -->
+</section>
+<?php } ?>
 
-                                    if ( $url_documento ) { ?>
-                                        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
-                                            <svg class="icon" aria-hidden="true">
-                                                <use
-                                                    xlink:href="#it-clip"
-                                                ></use>
-                                            </svg>
-                                            <div class="card-body">
-                                                <h5 class="card-title">
-                                                    <a class="text-decoration-none" href="<?php echo $url_documento; ?>" aria-label="Scarica il documento" title="Scarica il documento">
-                                                        Scarica il documento
-                                                    </a>
-                                                </h5>
-                                            </div>
-                                        </div>
-                                    <?php } ?>
-                                </div><!-- ./card-wrapper -->
-                            </section>
-                            <?php } ?>
+							
+							
+							
+							
+							
+							
 
                             <section id="ufficio_responsabile" class="it-page-section mb-5">
                                 <h4>Ufficio responsabile</h4>
