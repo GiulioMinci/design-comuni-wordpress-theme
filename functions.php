@@ -260,26 +260,58 @@ function get_parent_template () {
 	return basename( get_page_template_slug( wp_get_post_parent_id() ) );
 }
 
+/**
+ * Genera un PDF dal contenuto della pagina e lo salva nella directory wp-content/uploads/pdf_generati
+ *
+ * @param string $content Il contenuto della pagina da convertire in PDF
+ * @param string $title Il titolo della pagina per denominare il file PDF
+ * @return string|false Restituisce l'URL del PDF generato o false in caso di errore
+ */
+function generate_pdf_from_page_content($content, $title) {
+    require_once(ABSPATH . 'wp-content/themes/design-comuni-wordpress-theme-main/inc/lib/TCPDF/tcpdf.php');
 
- // Restituisce il formato e le dimensioni di un allegato
-function getFileSizeAndFormat($url) {
-    $percorso = parse_url($url);
-    $percorso = isset($percorso["path"]) ? substr($percorso["path"], 0, -strlen(pathinfo($url, PATHINFO_BASENAME))) : '';
-    $response = wp_remote_head($url);
+    // Crea un nuovo oggetto TCPDF
+    $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
 
-    if (is_wp_error($response)) {
-        return 'Errore nel recupero delle informazioni del file';
+    // Imposta il formato della pagina e le informazioni del documento
+    $pdf->SetCreator(PDF_CREATOR);
+    $pdf->SetAuthor('Your Name');
+    $pdf->SetTitle($title);
+    $pdf->SetSubject('Generated PDF');
+    $pdf->SetKeywords('PDF, WordPress, Generate');
+
+    // Imposta i margini
+    $pdf->SetMargins(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);
+    $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+    $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+    // Imposta il tipo di carattere
+    $pdf->SetFont('helvetica', '', 10);
+
+    // Aggiungi una pagina
+    $pdf->AddPage();
+
+    // Scrivi il contenuto della pagina nel PDF
+    $pdf->writeHTML($content, true, false, true, false, '');
+
+    // Genera il nome del file PDF usando il titolo della pagina
+    $filename = sanitize_title($title) . '.pdf';
+
+    // Salva il PDF nella directory specificata
+    $upload_dir = wp_upload_dir();
+    $pdf_dir = trailingslashit($upload_dir['basedir']) . 'pdf_generati/';
+    $pdf_path = $pdf_dir . $filename;
+
+    // Crea la directory se non esiste
+    if (!file_exists($pdf_dir)) {
+        wp_mkdir_p($pdf_dir);
     }
 
-    $headers = wp_remote_retrieve_headers($response);
-    $content_length = isset($headers['content-length']) ? intval($headers['content-length']) : 0;
+    // Salva il PDF
+    $pdf->Output($pdf_path, 'F');
 
-    $base = log($content_length, 1024);
-    $suffixes = array('', 'Kb', 'Mb', 'Gb', 'Tb');
-    $size_formatted = round(pow(1024, $base - floor($base)), 2) . ' ' . $suffixes[floor($base)];
-
-    $info_file = pathinfo($url);
-    $file_format = strtoupper(isset($info_file['extension']) ? $info_file['extension'] : '');
-
-    return $file_format . ' ' . $size_formatted;
+    // Restituisci l'URL del PDF generato
+    $pdf_url = trailingslashit($upload_dir['baseurl']) . 'pdf_generati/' . $filename;
+    return $pdf_url;
 }
+
