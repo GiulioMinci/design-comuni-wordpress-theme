@@ -265,13 +265,10 @@ get_header();
 								?>
 							
 							
-<?php if ($url_documento || $file_documento) { ?>
 <section id="documento" class="it-page-section mb-5">
     <h4>Documento</h4>
     <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
-    <?php
-        if ($file_documento) {
-    ?>
+        <?php if (!empty($file_documento)) { ?>
         <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
             <svg class="icon" aria-hidden="true">
                 <use xlink:href="#it-clip"></use>
@@ -284,10 +281,9 @@ get_header();
                 </h5>
             </div>
         </div>
-    <?php 
-        }
-        if ($url_documento) {
-    ?>
+        <?php } ?>
+
+        <?php if (!empty($url_documento)) { ?>
         <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
             <svg class="icon" aria-hidden="true">
                 <use xlink:href="#it-clip"></use>
@@ -300,13 +296,24 @@ get_header();
                 </h5>
             </div>
         </div>
-    <?php 
-        }
-    ?>
+        <?php } ?>
+
+        <?php if (!empty($pdf_url)) { ?>
+        <div class="card card-teaser shadow-sm p-4 mt-3 rounded border border-light flex-nowrap">
+            <svg class="icon" aria-hidden="true">
+                <use xlink:href="#it-file"></use>
+            </svg>
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a class="text-decoration-none" href="<?php echo $pdf_url; ?>">
+                        Il contenuto di questa pagina in pdf
+                    </a>
+                </h5>
+            </div>
+        </div>
+        <?php } ?>
     </div><!-- ./card-wrapper -->
 </section>
-<?php } ?>
-
 							
 							
 							
@@ -337,62 +344,58 @@ get_header();
                             </section>
                             <?php } ?>
 
-                            <?php if ($formati) { ?>
-                            <section id="formati_disponibili" class="it-page-section mb-5">
-                                <h4>Formati disponibili</h4>
-                                <div class="richtext-wrapper lora">
-                                    <?php echo $formati ?>		
-                                </div>
-                            </section>
-                            <?php } ?>
+								<div class="it-page-section mb-5">
+									<h4>Dettagli Documento</h4>
+									<div class="table-responsive">
+										<table class="table table-bordered">
+											<tbody>
+												<?php if ($formati) { ?>
+												<tr>
+													<th scope="row">Formati disponibili</th>
+													<td><?php echo $formati ?></td>
+												</tr>
+												<?php } ?>
 
-                            <?php if ($licenza) { ?>
-                            <section id="licenza_distribuzione" class="it-page-section mb-5">
-                                <h4>Licenza distribuzione</h4>
-                                <div class="richtext-wrapper lora">
-                                    <?php foreach($licenza as $tipo) { 
-                                        echo $tipo->name;
-                                    } ?>
-                                </div>
-                            </section>
-                            <?php } ?>
+												<?php if ($licenza) { ?>
+												<tr>
+													<th scope="row">Licenza distribuzione</th>
+													<td>
+														<?php foreach($licenza as $tipo) { 
+															echo $tipo->name . '<br>';
+														} ?>
+													</td>
+												</tr>
+												<?php } ?>
 
-                            <?php if ($servizi && is_array($servizi) && count($servizi)>0 ) { ?>
-                            <section id="servizi" class="it-page-section mb-5">
-                                <h4>Servizi collegati</h4>
-                                <div class="row">
-                                    <div class="col-12 col-sm-8">
-                                        <?php foreach ($servizi as $servizio_id) {
-                                            $servizio = get_post($servizio_id);
-                                            $with_border = true;
-                                            get_template_part("template-parts/servizio/card");
-                                        } ?>
-                                    </div>
-                                </div>
-                            </section>
-                            <?php } ?>
+												<?php if ($servizi && is_array($servizi) && count($servizi) > 0) { ?>
+												<tr>
+													<th scope="row">Servizi collegati</th>
+													<td>
+														<?php foreach ($servizi as $servizio_id) {
+															$servizio = get_post($servizio_id);
+															echo esc_html($servizio->post_title) . '<br>';
+														} ?>
+													</td>
+												</tr>
+												<?php } ?>
 
-                            <?php if ($data_inizio) { ?>
-                            <section id="data_inizio" class="it-page-section mb-5">
-                                <h4>Data inizio</h4>
-                                <div class="richtext-wrapper lora">
-                                    <?php
-                                        echo date_i18n('j F Y', strtotime($data_inizio));
-                                    ?>
-                                </div>
-                            </section>
-                            <?php } ?>
+												<?php if ($data_inizio) { ?>
+												<tr>
+													<th scope="row">Data inizio</th>
+													<td><?php echo date_i18n('j F Y', strtotime($data_inizio)); ?></td>
+												</tr>
+												<?php } ?>
 
-                            <?php if ($data_fine) { ?>
-                            <section id="data_fine" class="it-page-section mb-5">
-                                <h4>Data fine</h4>
-                                <div class="richtext-wrapper lora">
-                                    <?php
-                                        echo date_i18n('j F Y', strtotime($data_fine));
-                                    ?>
-                                </div>
-                            </section>
-                            <?php } ?>
+												<?php if ($data_fine) { ?>
+												<tr>
+													<th scope="row">Data fine</th>
+													<td><?php echo date_i18n('j F Y', strtotime($data_fine)); ?></td>
+												</tr>
+												<?php } ?>
+											</tbody>
+										</table>
+									</div>
+								</div>
 
                             <?php if ( $more_info ) {  ?>
                             <section id="ulteriori_informazioni" class="it-page-section mb-5">
@@ -412,19 +415,23 @@ get_header();
                             </section>
                             <?php } ?>
 
-                            <?php if( is_array($documenti_collegati) && count($documenti_collegati) ) { ?>
-                            <section id="documenti_collegati" class="it-page-section mb-5">
-                                <h4>Documenti collegati</h4>
-                                <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
-                                    <?php foreach ($documenti_collegati as $all_url) {
-                                        $all_id = attachment_url_to_postid($all_url);
-                                        $documento = get_post($all_id);
-                                        $with_border = true;
-                                        get_template_part("template-parts/documento/card");
-                                    } ?>
-                                </div>
-                            </section>
-                            <?php } ?>
+							<?php if ($documenti_collegati && is_array($documenti_collegati) && count($documenti_collegati) > 0) { ?>
+								<article id="documenti_collegati" class="it-page-section anchor-offset mt-5">
+									<h3>Documenti correlati</h3>
+									<div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
+										<?php foreach ($documenti_collegati as $all_url) { ?>
+											<?php //$all_id = attachment_url_to_postid($all_url); 
+											$documento = get_post($all_url);
+											$with_border = true;
+											get_template_part("template-parts/documento/card"); ?>
+										<?php } ?>
+									</div>
+								</article>
+							<?php } ?>
+                          
+							
+							
+							
                         </div><!-- /it-page-sections-container -->
 
                         <div>
@@ -447,6 +454,9 @@ get_header();
         const descText = document.querySelector('#descrizione')?.closest('article').innerText;
         const wordsNumber = descText.split(' ').length
         document.querySelector('#readingTime').innerHTML = `${Math.ceil(wordsNumber / 200)} min`;
+    </script>
+<?php
+get_footer();
     </script>
 <?php
 get_footer();
