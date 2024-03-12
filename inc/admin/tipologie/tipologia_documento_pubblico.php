@@ -167,7 +167,6 @@ function dci_add_documento_pubblico_metaboxes()
             'required' => 'required'
         ),
     ));
-
     //DOCUMENTO
     $cmb_documento = new_cmb2_box(array(
         'id' => $prefix . 'box_documento',
@@ -200,6 +199,7 @@ function dci_add_documento_pubblico_metaboxes()
     ));
 
 
+
     //DESCRIZIONE
     $cmb_descrizione = new_cmb2_box(array(
         'id' => $prefix . 'box_descrizione',
@@ -220,6 +220,30 @@ function dci_add_documento_pubblico_metaboxes()
             'teeny' => false, // output the minimal editor config used in Press This
         ),
     ));
+	
+$cmb_descrizione->add_field(array(
+    'name' => __('Extra', 'design_comuni_italia'),
+    'id'   => $prefix . 'paragrafi_extra',
+    'type' => 'group',
+    'repeatable' => true, // Per rendere il blocco ripetibile
+    'after_row' => 'dcmb_after_descrizione_estesa', // Aggiunge dopo la descrizione estesa
+    'fields' => array(
+        array(
+            'name' => __('Titolo Extra', 'design_comuni_italia'),
+            'id'   => $prefix . 'titolo-paragrafo-extra',
+            'type' => 'text',
+        ),
+        array(
+            'name' => __('Paragrafo Extra', 'design_comuni_italia'),
+            'id'   => $prefix . 'corpo-paragrafo-extra',
+            'type' => 'wysiwyg',
+            'options' => array(
+                'textarea_rows' => 10, // Aumenta il numero di righe per l'editor
+            ),
+        ),
+    ),
+));
+	
 
     $cmb_descrizione->add_field(array(
         'id' => $prefix . 'gallery',
@@ -242,18 +266,17 @@ function dci_add_documento_pubblico_metaboxes()
         )
     ));
 
-
-	$cmb_descrizione->add_field( array(
+    $cmb_descrizione->add_field(array(
         'id' => $prefix . 'autori',
-        'name'    => __( 'Autore/i', 'design_comuni_italia' ),
-        'desc' => __( 'Persone che hanno redatto il documento.' , 'design_comuni_italia' ),
-        'type'    => 'pw_multiselect',
-        'options' => dci_get_posts_options('persona_pubblica'),
-        'attributes' => array(
-            'placeholder' =>  __( 'Seleziona le Persone Pubbliche', 'design_comuni_italia' ),
-        )
-    ) );
-	
+        'name' => __('Autore/i', 'design_comuni_italia'),
+        'desc' => __('Persone che hanno redatto il documento', 'design_comuni_italia'),
+        'type' => 'wysiwyg',
+        'options' => array(
+            'media_buttons' => false, // show insert/upload button(s)
+            'textarea_rows' => 10, // rows="..."
+            'teeny' => false, // output the minimal editor config used in Press This
+        ),
+    ));
 
     $cmb_descrizione->add_field(array(
         'id' => $prefix . 'formati',
@@ -312,30 +335,21 @@ function dci_add_documento_pubblico_metaboxes()
         'priority' => 'high',
     ));
 
-
     $cmb_tempi->add_field(array(
         'name' => __('Data inizio', 'design_comuni_italia'),
         'id' => $prefix . 'data_inizio',
         'desc' => __('Data e fase iniziale. Es data di apertura della parteciopazione a un bando".', 'design_comuni_italia'),
-        'type' => 'text_date',
+        'type' => 'text_date_timestamp',
         'date_format' => 'd-m-Y',
-        'data-datepicker' => json_encode( array(
-            'yearRange' => '-100:+0'
-        ) )
     ));
-
 
     $cmb_tempi->add_field(array(
         'name' => __('Data fine', 'design_comuni_italia'),
         'id' => $prefix . 'data_fine',
         'desc' => __('Prevedere una data di scadenza del contenuto del documento. Es. data comunicazione vincitori del bando".', 'design_comuni_italia'),
-        'type' => 'text_date',
+        'type' => 'text_date_timestamp',
         'date_format' => 'd-m-Y',
-        'data-datepicker' => json_encode( array(
-            'yearRange' => '-100:+0'
-        ) )
     ));
-
 
     //dataset
     $cmb_dataset = new_cmb2_box(array(
