@@ -449,6 +449,78 @@ $cmb_descrizione->add_field(array(
             'teeny' => false, // output the minimal editor config used in Press This
         ),
     ));
+	
+	add_action( 'cmb2_admin_init', 'registra_metabox_tipi_atto' );
+function registra_metabox_tipi_atto() {
+    $prefix = 'info_atto_'; // Prefisso per identificare i campi
+
+    $cmb = new_cmb2_box( array(
+        'id'            => $prefix . 'metabox',
+        'title'         => __( 'Dettagli Atto Normativo Regionale', 'textdomain' ),
+        'object_types'  => array( 'post', ), // Tipo di contenuto a cui applicare il metabox
+        'context'       => 'normal',
+        'priority'      => 'high',
+        'show_names'    => true, // Mostra i nomi dei campi a lato
+    ));
+
+    // Campo per il tipo di atto
+    $cmb->add_field( array(
+        'name'             => __( 'Tipo di Atto', 'textdomain' ),
+        'id'               => $prefix . 'tipo_atto',
+        'type'             => 'select',
+        'show_option_none' => true,
+        'default'          => 'custom',
+        'options'          => array(
+            'legge_regionale'       => __( 'Legge Regionale', 'textdomain' ),
+            'regolamento'           => __( 'Regolamento', 'textdomain' ),
+            'delibera_giunta'       => __( 'Delibera di Giunta', 'textdomain' ),
+            'decreto_presidente'    => __( 'Decreto del Presidente della Regione', 'textdomain' ),
+            'altro'                 => __( 'Altro', 'textdomain' ),
+        ),
+    ));
+
+    // Campi per la data di emissione, numero dell'atto, e autorità emittente
+    $cmb->add_field( array(
+        'name' => __( 'Data di Emissione', 'textdomain' ),
+        'id'   => $prefix . 'data_emissione',
+        'type' => 'text_date',
+    ));
+
+    $cmb->add_field( array(
+        'name' => __( 'Numero dell\'Atto', 'textdomain' ),
+        'id'   => $prefix . 'numero_atto',
+        'type' => 'text_small',
+    ));
+
+    $cmb->add_field( array(
+        'name' => __( 'Autorità Emittente', 'textdomain' ),
+        'id'   => $prefix . 'autorita_emittente',
+        'type' => 'text',
+    ));
+
+    // Campo per il caricamento del documento
+    $cmb->add_field( array(
+        'name' => __( 'Carica Documento', 'textdomain' ),
+        'id'   => $prefix . 'documento',
+        'type' => 'file',
+        // Opzioni di configurazione del file
+        'options' => array(
+            'url' => false, // Non mostrare l'URL del file
+        ),
+        'text'    => array(
+            'add_upload_file_text' => __( 'Carica Documento', 'textdomain' ) // Cambia il testo del bottone di upload
+        ),
+        'query_args' => array(
+            'type' => array(
+                'application/pdf', // Solo file PDF
+            ),
+        ),
+        'preview_size' => 'large', // Anteprima dimensione immagine
+    ));
+}
+
+	
+	
 
     $cmb_informazioni->add_field(array(
         'id' => $prefix . 'documenti_collegati',
@@ -487,6 +559,84 @@ $cmb_descrizione->add_field(array(
         'remove_default' => 'true',
     ) );
 }
+
+
+add_action('cmb2_admin_init', 'aggiungi_metabox_risolutore_normative_regionali');
+function aggiungi_metabox_risolutore_normative_regionali() {
+    $prefix = '_dci_'; // Adatta il prefisso secondo le tue convenzioni
+
+    // Crea il metabox
+    $cmb_risolutore_normative_regionali = new_cmb2_box(array(
+        'id'            => $prefix . 'risolutore_normative_regionali',
+        'title'         => esc_html__('Risolutore Normative Regionali', 'design_comuni_italia'),
+        'object_types'  => array('documento_pubblico'), 
+        'context'       => 'normal',
+        'priority'      => 'default',
+        'show_names'    => true, 
+        'closed'        => true, 
+    ));
+
+    // Campo per la selezione del tipo di atto
+    $cmb_risolutore_normative_regionali->add_field(array(
+        'name'    => __('Tipo di Atto', 'design_comuni_italia'),
+        'desc'    => __('Seleziona il tipo di atto normativo regionale.', 'design_comuni_italia'),
+        'id'      => $prefix . 'tipo_atto',
+        'type'    => 'select',
+        'show_option_none' => true,
+        'options' => array(
+            'legge_regionale' => __('Legge Regionale', 'design_comuni_italia'),
+            'regolamento_regionale' => __('Regolamento Regionale', 'design_comuni_italia'),
+            'delibera_giunta' => __('Delibera di Giunta Regionale', 'design_comuni_italia'),
+            'decreto_presidente' => __('Decreto del Presidente della Regione', 'design_comuni_italia'),
+            'mozione_consigliare' => __('Mozione Consiliare', 'design_comuni_italia'),
+            'altro' => __('Altro', 'design_comuni_italia'),
+        ),
+    ));
+
+    // Campo per la data di emissione dell'atto
+    $cmb_risolutore_normative_regionali->add_field(array(
+        'name' => __('Data di Emissione', 'design_comuni_italia'),
+        'id'   => $prefix . 'data_emissione',
+        'type' => 'text_date',
+        'date_format' => 'd/m/Y'
+    ));
+
+    // Campo per il numero dell'atto
+    $cmb_risolutore_normative_regionali->add_field(array(
+        'name' => __('Numero dell\'Atto', 'design_comuni_italia'),
+        'id'   => $prefix . 'numero_atto',
+        'type' => 'text_medium'
+    ));
+
+    // Campo per l'autorità emittente
+    $cmb_risolutore_normative_regionali->add_field(array(
+        'name' => __('Autorità Emittente', 'design_comuni_italia'),
+        'id'   => $prefix . 'autorita_emittente',
+        'type' => 'text'
+    ));
+
+    // Campo per il caricamento del documento
+    $cmb_risolutore_normative_regionali->add_field(array(
+        'name' => __('Documento', 'design_comuni_italia'),
+        'id'   => $prefix . 'documento',
+        'type' => 'file',
+        'options' => array(
+            'url' => false, // Non mostrare l'URL del file
+        ),
+        'query_args' => array(
+            'type' => 'application/pdf', // Solo file PDF
+        ),
+        'text'    => array(
+            'add_upload_file_text' => __('Carica Documento', 'design_comuni_italia')
+        ),
+    ));
+
+    // Qui puoi aggiungere altri campi specifici per ciascun tipo di atto se necessario
+}
+
+
+
+
 
 /**
  * aggiungo js per controllo compilazione campi
@@ -531,6 +681,9 @@ function dci_documento_pubblico_set_post_content( $data ) {
     return $data;
 }
 add_filter( 'wp_insert_post_data' , 'dci_documento_pubblico_set_post_content' , '99', 1 );
+
+
+
 
 
 
