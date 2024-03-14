@@ -312,6 +312,72 @@ function generate_pdf_from_page_content($content, $title) {
 
     // Restituisci l'URL del PDF generato
     $pdf_url = trailingslashit($upload_dir['baseurl']) . 'pdf_generati/' . $filename;
+
     return $pdf_url;
 }
 
+
+
+    // Risolutore urn
+
+add_action('save_post_documento_pubblico', 'dci_salva_urn_normativa_regionale', 10, 3);
+function dci_salva_urn_normativa_regionale($post_id, $post, $update) {
+    // Evita l'esecuzione durante i salvataggi automatici
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) return;
+    
+    // Verifica dei permessi
+    if (!current_user_can('edit_post', $post_id)) return;
+
+    $tipo_atto = isset($_POST['_dci_tipo_atto']) ? $_POST['_dci_tipo_atto'] : '';
+    $data_emissione = isset($_POST['_dci_data_emissione']) ? $_POST['_dci_data_emissione'] : '';
+    $numero_atto = isset($_POST['_dci_numero_atto']) ? $_POST['_dci_numero_atto'] : '';
+    $autorita_emittente = isset($_POST['_dci_autorita_emittente']) ? $_POST['_dci_autorita_emittente'] : '';
+
+    // Crea l'URN. Adatta questa logica in base alle tue esigenze specifiche.
+    $urn = "urn:nir:regione:" . sanitize_title($autorita_emittente) . ":" . sanitize_title($tipo_atto) . ":" . date('Y-m-d', strtotime($data_emissione)) . ":" . sanitize_text_field($numero_atto);
+
+    // Salva l'URN come metadato del post
+    update_post_meta($post_id, '_dci_urn', $urn);
+}
+
+function aggiungi_query_var_personalizzate($vars) {
+    $vars[] = 'urn'; // Assicurati che 'urn' sia riconosciuto come una query var valida
+    return $vars;
+}
+add_filter('query_vars', 'aggiungi_query_var_personalizzate');
+
+
+add_action('template_redirect', 'gestisci_richiesta_urn_custom');
+function gestisci_richiesta_urn_custom() {
+    $query_str = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+    $urn_prefix = 'urn:nir:';
+    $urn = '';
+
+    if (substr($query_str, 0, strlen($urn_prefix)) === $urn_prefix) {
+        $urn = urldecode($query_str); // Decodifica l'URN
+        $urn = sanitize_text_field($urn); // Sanifica l'URN per la sicurezza
+
+        // Logica per cercare il post basato sull'URN nel tipo di post documento_pubblico
+        $args = array(
+            'post_type' => 'documento_pubblico', // Specifica il tipo di post custom
+            'meta_query' => array(
+                array(
+                    'key' => '_dci_urn', // Assicurati che corrisponda al campo meta effettivo
+                    'value' => $urn,
+                    'compare' => '='
+                )
+            ),
+            'posts_per_page' => 1
+        );
+        $query = new WP_Query($args);
+
+        if ($query->have_posts()) {
+            $query->the_post();
+            wp_redirect(get_permalink()); // Reindirizza alla pagina del post trovato
+            exit;
+        } else {
+            wp_redirect(home_url('/404')); // Nessun post trovato con quell'URN, reindirizza a una pagina di errore
+            exit;
+        }
+    }
+}
