@@ -40,13 +40,12 @@ get_header();
             $documenti_collegati = dci_get_meta("documenti_collegati");
 			$paragrafi_extra = get_post_meta($post->ID, '_dci_documento_pubblico_paragrafi_extra', true);
 			$pdf_url = generate_pdf_from_page_content(get_the_content(), get_the_title());
-
 			$post_id = get_the_ID();
-
 			$prefix = '_dci_documento_pubblico_';
-
 			$ulteriori_allegati = get_post_meta($post_id, $prefix . 'ulteriori_allegati', true);
-		
+			$urn = get_post_meta($post->ID, '_dci_urn', true);
+
+
 		
             ?>
 		
@@ -140,6 +139,12 @@ get_header();
                                                                 </li>
 																
                                                                 <?php } ?>
+																
+															   <li class="nav-item">
+                                                                    <a class="nav-link" href="#dettagli_documento">
+                                                                        <span class="title-medium">Dettagli del documento</span>
+                                                                    </a>
+                                                                </li>	
 
                                                                 <li class="nav-item">
                                                                     <a class="nav-link" href="#ufficio_responsabile">
@@ -154,18 +159,7 @@ get_header();
                                                                     </a>
                                                                 </li>
                                                                 <?php } ?>
-
-                                                                <li class="nav-item">
-                                                                    <a class="nav-link" href="#formati_disponibili">
-                                                                        <span class="title-medium">Formati disponibili</span>
-                                                                    </a>
-                                                                </li>
-
-                                                                <li class="nav-item">
-                                                                    <a class="nav-link" href="#licenza_distribuzione">
-                                                                        <span class="title-medium">Licenza di distribuzione</span>
-                                                                    </a>
-                                                                </li>																
+												
 
                                                                 <?php if( $servizi && count($servizi) ) { ?>
                                                                 <li class="nav-item">
@@ -373,7 +367,7 @@ get_header();
                             </section>
                             <?php } ?>
 
-								<div class="it-page-section mb-5">
+								<div id="dettagli_documento" class="it-page-section mb-5">
 									<h4>Dettagli Documento</h4>
 									<div class="table-responsive">
 										<table class="table table-bordered">
@@ -451,10 +445,23 @@ get_header();
                                 <h4>Riferimenti normativi</h4>
                                 <div class="richtext-wrapper lora">
                                     <?php echo $riferimenti_normativi ?>
+									<?php if ($urn) : ?>
+									<p>URN: <?php echo esc_html($urn); ?></p>
+								<?php endif; ?>
+									
+					
+									
                                 </div>
                             </section>
                             <?php } ?>
+							
+							
+							
 
+
+								
+								
+								
 							<?php if ($documenti_collegati && is_array($documenti_collegati) && count($documenti_collegati) > 0) { ?>
 								<article id="documenti_collegati" class="it-page-section anchor-offset mt-5">
 									<h3>Documenti correlati</h3>

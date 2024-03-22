@@ -26,7 +26,7 @@ function dci_register_ricerca_options(){
     $ricerca_options->add_field( array(
         'id' => $prefix . 'ricerca_istruzioni',
         'name'        => __( 'Sezione "Forse stavi cercando"', 'design_comuni_italia' ),
-        'desc' => __( 'Inserisci qui link a contenuti del Sito del Comune.' , 'design_comuni_italia' ),
+        'desc' => __( 'Inserisci qui link a contenuti del Sito della Regione.' , 'design_comuni_italia' ),
         'type' => 'title',
     ) );
 

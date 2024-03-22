@@ -367,7 +367,7 @@ class Breadcrumb_Trail {
 				}
 
 				if (get_post_type() == 'documento_pubblico') {
-					$this->items[] =  "<a href='".home_url("documento_pubblico")."'>".__("Documenti pubblici", "design_comuni_italia")."</a>";
+					$this->items[] =  "<a href='".home_url("documento_pubblico")."'>".__("Documenti", "design_comuni_italia")."</a>";
 					$terms = get_the_terms(get_the_ID(),'tipi_documento');
 					if($terms){
 					  foreach ($terms as $term) {
@@ -433,7 +433,7 @@ class Breadcrumb_Trail {
                         $this->items[] = single_term_title( '', false );
                     }
                     else if (is_tax(array("tipi_documento"))){
-                        $this->items[] = "<a href='".home_url("documenti-e-dati")."'>".__("Documenti e dati", "design_comuni_italia")."</a>";
+                        $this->items[] = "<a href='".home_url("documenti-e-dati")."'>".__("Documenti", "design_comuni_italia")."</a>";
                         $term_name = single_term_title( '', false );
                         $this->items[] = __(dci_get_breadcrumb_label($term_name), "design_comuni_italia");
                     }

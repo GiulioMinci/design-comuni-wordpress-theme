@@ -684,6 +684,3 @@ add_filter( 'wp_insert_post_data' , 'dci_documento_pubblico_set_post_content' , 
 
 
 
-
-
-

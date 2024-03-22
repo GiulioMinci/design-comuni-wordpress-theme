@@ -34,18 +34,62 @@ function dci_register_post_type_notizia() {
     remove_post_type_support( 'notizia', 'editor');
 }
 
-/**
- * Aggiungo label sotto il titolo
- */
+
+
+
+
+
+
+
+
+
+
+
 add_action( 'edit_form_after_title', 'dci_notizia_add_content_after_title' );
 function dci_notizia_add_content_after_title($post) {
     if($post->post_type == "notizia")
         _e('<span><i>il <b>Titolo</b> è il <b>Titolo della News o del Comunicato</b>.</i></span><br><br>', 'design_comuni_italia' );
 }
 
-add_action( 'cmb2_init', 'dci_add_notizia_metaboxes' );
+
+	
+	
+	
+	add_action( 'cmb2_init', 'dci_add_notizia_metaboxes' );
 function dci_add_notizia_metaboxes() {
     $prefix = '_dci_notizia_';
+
+    // Checkbox Notizia in evidenza
+    $cmb_checkbox = new_cmb2_box( array(
+        'id'           => $prefix . 'box_checkbox',
+        'title'        => __( 'Opzioni', 'design_comuni_italia' ),
+        'object_types' => array( 'notizia' ),
+        'context'      => 'normal',
+        'priority'     => 'high',
+    ) );
+
+    $cmb_checkbox->add_field( array(
+        'id'      => $prefix . 'notizia_in_evidenza',
+        'name'    => __( 'Notizia in evidenza', 'design_comuni_italia' ),
+        'desc'    => __( 'Seleziona se la notizia deve essere in evidenza.', 'design_comuni_italia' ),
+        'type'    => 'checkbox',
+    ) );
+
+    $cmb_checkbox->add_field( array(
+        'id'      => $prefix . 'campagne_di_comunicazione',
+        'name'    => __( 'Campagne di comunicazione', 'design_comuni_italia' ),
+        'desc'    => __( 'Seleziona se la notizia è parte di una campagna di comunicazione.', 'design_comuni_italia' ),
+        'type'    => 'checkbox',
+    ) );
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
     //argomenti
     $cmb_argomenti = new_cmb2_box( array(
@@ -278,7 +322,52 @@ function dci_add_notizia_metaboxes() {
         ),
     ) );
 
+	
+	
+	
+	
+	    // Checkbox Notizia in evidenza
+    $cmb_checkbox = new_cmb2_box( array(
+        'id'           => $prefix . 'box_checkbox',
+        'title'        => __( 'Opzioni', 'design_comuni_italia' ),
+        'object_types' => array( 'notizia' ),
+        'context'      => 'normal',
+        'priority'     => 'high',
+    ) );
+
+    $cmb_checkbox->add_field( array(
+        'id'      => $prefix . 'notizia_in_evidenza',
+        'name'    => __( 'Notizia in evidenza', 'design_comuni_italia' ),
+        'desc'    => __( 'Seleziona se la notizia deve essere in evidenza.', 'design_comuni_italia' ),
+        'type'    => 'checkbox',
+    ) );
+
+    $cmb_checkbox->add_field( array(
+        'id'      => $prefix . 'campagne_di_comunicazione',
+        'name'    => __( 'Campagne di comunicazione', 'design_comuni_italia' ),
+        'desc'    => __( 'Seleziona se la notizia è parte di una campagna di comunicazione.', 'design_comuni_italia' ),
+        'type'    => 'checkbox',
+    ) );
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
+
+
+
+
+
+
+
 
 
 /**

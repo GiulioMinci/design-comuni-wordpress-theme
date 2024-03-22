@@ -64,7 +64,6 @@ function dci_get_tipologie_names() {
 /**
  * restituisce tutti i prefix dei custom types del sito dei Comuni Italiani
  */
-
 function dci_get_tipologie_prefixes(){
     $result = array();
     foreach (COMUNI_TIPOLOGIE as $tipologia) {
@@ -72,8 +71,6 @@ function dci_get_tipologie_prefixes(){
     }
     return $result;
 }
-
-
 
 /**
  * restituisce tuttle capability dei custom types del Sito dei Comuni

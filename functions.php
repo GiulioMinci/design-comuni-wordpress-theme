@@ -312,13 +312,12 @@ function generate_pdf_from_page_content($content, $title) {
 
     // Restituisci l'URL del PDF generato
     $pdf_url = trailingslashit($upload_dir['baseurl']) . 'pdf_generati/' . $filename;
-
     return $pdf_url;
 }
 
 
 
-    // Risolutore urn
+
 
 add_action('save_post_documento_pubblico', 'dci_salva_urn_normativa_regionale', 10, 3);
 function dci_salva_urn_normativa_regionale($post_id, $post, $update) {
@@ -328,6 +327,7 @@ function dci_salva_urn_normativa_regionale($post_id, $post, $update) {
     // Verifica dei permessi
     if (!current_user_can('edit_post', $post_id)) return;
 
+    // Assicurati che i tuoi campi siano impostati
     $tipo_atto = isset($_POST['_dci_tipo_atto']) ? $_POST['_dci_tipo_atto'] : '';
     $data_emissione = isset($_POST['_dci_data_emissione']) ? $_POST['_dci_data_emissione'] : '';
     $numero_atto = isset($_POST['_dci_numero_atto']) ? $_POST['_dci_numero_atto'] : '';
@@ -345,6 +345,7 @@ function aggiungi_query_var_personalizzate($vars) {
     return $vars;
 }
 add_filter('query_vars', 'aggiungi_query_var_personalizzate');
+
 
 
 add_action('template_redirect', 'gestisci_richiesta_urn_custom');

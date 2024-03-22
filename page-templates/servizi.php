@@ -1,33 +1,45 @@
-<?php
-/* Template Name: Servizi
- *
- * Servizi template file
- *
- * @package Design_Comuni_Italia
- */
-global $post;
-get_header();
 
+<?php
+/*
+ * Template Name: Servizi
+ * Descrizione: Pagina per visualizzare i servizi ottenuti dalle API
+ */
+
+get_header();
 ?>
-	<main>
-		<?php
-		while ( have_posts() ) :
-			the_post();
-			
-			?>
-			<?php get_template_part("template-parts/hero/hero"); ?>
-			<?php get_template_part("template-parts/servizio/tutti-servizi"); ?>
-			<?php get_template_part("template-parts/servizio/categorie"); ?>
-			<?php get_template_part("template-parts/common/valuta-servizio"); ?>
-			<?php get_template_part("template-parts/common/assistenza-contatti"); ?>
-							
-		<?php 
-			endwhile; // End of the loop.
-		?>
-	</main>
+
+<main>
+    <?php
+    while (have_posts()) :
+        the_post();
+        ?>
+        <!-- Hero section -->
+        <?php get_template_part("template-parts/hero/hero"); ?>
+
+        <!-- Tutti i servizi section -->
+        <?php get_template_part("template-parts/servizio/tutti-servizi"); ?>
+
+        <!-- Container -->
+        <div class="container">
+            <!-- Carousel dei servizi -->
+            <?php get_template_part('template-parts/home/carousel-servizi'); ?>
+
+            <!-- Categorie dei servizi -->
+            <?php get_template_part("template-parts/servizio/categorie"); ?>
+
+            <!-- Valutazione dei servizi -->
+
+            <!-- Contatti e assistenza -->
+        </div>
+        <?php
+    endwhile; // End of the loop.
+    ?>
+</main>
+
+
+
+
 
 <?php
 get_footer();
-
-
-
+?>
