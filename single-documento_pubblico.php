@@ -50,6 +50,12 @@ get_header();
             ?>
 		
 		
+		
+		
+
+		
+		
+		
             <div class="container" id="main-container">
                 <div class="row">
                     <div class="col px-lg-4">
@@ -80,7 +86,8 @@ get_header();
             <div class="container">
                 <div class="row border-top border-light row-column-border row-column-menu-left">
                     <aside class="col-lg-3">
-                        <div class="cmp-navscroll sticky-top" aria-labelledby="accordion-title-one">
+<div class="cmp-navscroll sticky-top" id="navscroll" aria-labelledby="accordion-title-one" style="padding-top: 60px; margin-bottom: 80px; z-index: 1;">
+	
                             <nav class="navbar it-navscroll-wrapper navbar-expand-lg" aria-label="Indice della pagina" data-bs-navscroll>
                                 <div class="navbar-custom" id="navbarNavProgress">
                                     <div class="menu-wrapper">
@@ -228,10 +235,10 @@ get_header();
                         </div>
                     </aside>
 
-                    <div class="col-12 col-lg-9">
-                        <div class="it-page-sections-container">
+<div class="col-12 col-lg-9" >
+                        <div class="it-page-sections-container"  >
                             <?php if( $descrizione) { ?>
-                            <section id="descrizione" class="it-page-section mb-5">
+                            <section id="descrizione" class="it-page-section mb-5" style="padding-top: 15px;">
                                 <h4>Descrizione</h4>
                                 <div class="richtext-wrapper lora">
                                     <?php echo $descrizione; ?>
@@ -255,12 +262,14 @@ get_header();
 											// Capitalizza la prima lettera del titolo
 											$titolo = ucfirst($titolo);
 								?>
-											<section id="paragrafo_extra_<?php echo sanitize_title($titolo); ?>" class="pt-4">
+       										 <section id="paragrafo_extra_<?php echo sanitize_title($titolo); ?>" class="it-page-section mb-5" style="padding-top: 15px;">
 												<h4 class="section-title"><?php echo $titolo; ?></h4>
+
 												<?php 
 												// Stampa il testo del paragrafo
 												echo $testo;
 												?>
+												
 											</section>
 								<?php
 										}
@@ -279,8 +288,8 @@ get_header();
 											</svg>
 											<div class="card-body">
 												<h5 class="card-title">
-													<a class="text-decoration-none" href="<?php echo $file_documento; ?>">
-														Documento allegato
+                                                    <a class="text-decoration-none" href="<?php echo $file_documento; ?>" aria-label="Scarica il documento <?php echo $documento->post_title; ?>" title="Scarica il documento <?php echo $documento->post_title; ?>">
+                                                        <?php echo $documento->post_title; ?> (<?php echo getFileSizeAndFormat($file_documento);?>)														Documento allegato
 													</a>
 												</h5>
 											</div>
@@ -355,7 +364,7 @@ get_header();
 
 
                             <?php if ($autori &&  is_array($autori) && count($autori)) { ?>
-                            <section id="autore" class="it-page-section mb-5">
+                            <section id="autore" class="it-page-section mb-5" style="padding-top: 15px;">
                                 <h4>Autore/i</h4>
                                 <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
                                     <?php foreach ($autori as $persona_id) { ?>
@@ -367,7 +376,7 @@ get_header();
                             </section>
                             <?php } ?>
 
-								<div id="dettagli_documento" class="it-page-section mb-5">
+								<div id="dettagli_documento" class="it-page-section mb-5" style="padding-top: 15px;">
 									<h4>Dettagli Documento</h4>
 									<div class="table-responsive">
 										<table class="table table-bordered">
@@ -415,12 +424,24 @@ get_header();
 													<td><?php echo date_i18n('j F Y', strtotime($data_fine)); ?></td>
 												</tr>
 												<?php } ?>
+												<?php if ($urn) : ?>
+												<tr>	
+													<th scope="row">Urn permanente</th>
+													<td><?php echo esc_html($urn); ?></td>
+												</tr>
+								<?php endif; ?>
 											</tbody>
 										</table>
 									</div>
 								</div>
 							
-                            <section id="ufficio_responsabile" class="it-page-section mb-5">
+							
+							
+							
+							
+							
+							
+                            <section id="ufficio_responsabile" class="it-page-section mb-5" style="padding-top: 15px;">
                                 <h4>Ufficio responsabile</h4>
                                 <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
                                     <?php foreach ($ufficio_responsabile as $uo_id) {
@@ -432,7 +453,7 @@ get_header();
 							
 							
                             <?php if ( $more_info ) {  ?>
-                            <section id="ulteriori_informazioni" class="it-page-section mb-5">
+                            <section id="ulteriori_informazioni" class="it-page-section mb-5" style="padding-top: 15px;">
                                 <h4>Ulteriori informazioni</h4>
                                 <div class="richtext-wrapper lora">
                                     <?php echo $more_info ?>
@@ -441,13 +462,11 @@ get_header();
                             <?php }  ?>
 
                             <?php if ( $riferimenti_normativi ) { ?>
-                            <section id="riferimenti_normativi" class="it-page-section mb-5">
+                            <section id="riferimenti_normativi" class="it-page-section mb-5" style="padding-top: 15px;">
                                 <h4>Riferimenti normativi</h4>
                                 <div class="richtext-wrapper lora">
                                     <?php echo $riferimenti_normativi ?>
-									<?php if ($urn) : ?>
-									<p>URN: <?php echo esc_html($urn); ?></p>
-								<?php endif; ?>
+
 									
 					
 									
@@ -501,6 +520,12 @@ get_header();
         const descText = document.querySelector('#descrizione')?.closest('article').innerText;
         const wordsNumber = descText.split(' ').length
         document.querySelector('#readingTime').innerHTML = `${Math.ceil(wordsNumber / 200)} min`;
+
+
+
     </script>
+
+
+
 <?php
 get_footer();
