@@ -63,7 +63,15 @@ if (stripos(get_search_query(), 'servizi') !== false) {
     get_template_part('template-parts/search/filters-servizi-accessounico');
 }
 ?>								
+<<<<<<< Updated upstream
 															
+=======
+								
+								
+								
+								
+								
+>>>>>>> Stashed changes
 								
 <?php
 
@@ -75,7 +83,27 @@ if (isset($_GET['post_types']) && in_array('servizio', $_GET['post_types'])) {
 								
 								
 								
+<<<<<<< Updated upstream
 			
+=======
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+								
+>>>>>>> Stashed changes
 								
 								
 									

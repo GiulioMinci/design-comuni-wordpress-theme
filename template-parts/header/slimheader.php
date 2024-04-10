@@ -5,9 +5,13 @@
         <div class="it-header-slim-wrapper-content">
 <a class="d-lg-block navbar-brand" target="_blank" href="<?php echo dci_get_option("url_sito_regione"); ?>" target="_blank" aria-label="Vai al portale <?php echo dci_get_option("nome_regione"); ?> - link esterno - apertura nuova scheda" title="Vai al portale <?php echo dci_get_option("nome_regione"); ?>" style="font-family: 'Titillium Web', sans-serif; font-size: 16px; font-weight: bold;"><?php echo dci_get_option("nome_regione"); ?></a>
           <div class="it-header-slim-right-zone" role="navigation">
+<<<<<<< Updated upstream
 			  
 			  
        <!--      <div class="nav-item dropdown" style="background-color: #00402b;">
+=======
+            <div class="nav-item dropdown" style="background-color: #00402b;">
+>>>>>>> Stashed changes
               <button type="button" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" aria-controls="languages" aria-haspopup="true" style="background-color: #00402b; color: #ffffff;">
                 <span class="visually-hidden">Lingua attiva:</span>
                 <span style="color: #ffffff;">ITA</span>
@@ -35,7 +39,11 @@
                   </div>
                 </div>
               </div>
+<<<<<<< Updated upstream
             </div>  -->
+=======
+            </div>
+>>>>>>> Stashed changes
 
             <?php
             if(!is_user_logged_in()) {

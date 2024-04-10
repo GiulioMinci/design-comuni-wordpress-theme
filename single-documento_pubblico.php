@@ -441,7 +441,11 @@ get_header();
 							
 							
 							
+<<<<<<< Updated upstream
                             <section id="ufficio_responsabile" class="it-page-section mb-5" style="padding-top: 15px;">
+=======
+                            <section id="ufficio_responsabile" class="it-page-section mb-5">
+>>>>>>> Stashed changes
                                 <h4>Ufficio responsabile</h4>
                                 <div class="card-wrapper card-teaser-wrapper card-teaser-wrapper-equal">
                                     <?php foreach ($ufficio_responsabile as $uo_id) {

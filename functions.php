@@ -496,6 +496,7 @@ function set_selected_argomenti($argomenti_selected) {
 function get_selected_argomenti() {
     return isset($_SESSION['selected_argomenti']) ? $_SESSION['selected_argomenti'] : '';
 }
+<<<<<<< Updated upstream
 
 
 
@@ -589,3 +590,5 @@ function populate_servizi_uau_table() {
 
 
 
+=======
+>>>>>>> Stashed changes
