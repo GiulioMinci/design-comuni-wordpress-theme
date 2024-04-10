@@ -1,4 +1,4 @@
-<a class="btn btn-primary btn-icon btn-full" href="#" data-element="personal-area-login">
+<a class="btn btn-primary btn-icon btn-full" href="#" data-element="personal-area-login" style="background-color: #00402b;">
     <span class="rounded-icon" aria-hidden="true">
         <svg class="icon icon-primary">
             <use xlink:href="#it-user"></use>

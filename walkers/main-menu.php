@@ -60,6 +60,11 @@ class Main_Menu_Walker extends Walker_Nav_Menu {
             $atts['class'] = 'nav-link';
         }
 
+        // Verifica se la voce di menu corrisponde alla pagina attiva
+        if (in_array('current-menu-item', $classes)) {
+            $atts['class'] .= ' active';
+        }
+
         $attributes = '';
         foreach ($atts as $attr => $value) {
             if (!empty($value)) {

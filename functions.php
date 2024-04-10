@@ -260,6 +260,32 @@ function get_parent_template () {
 	return basename( get_page_template_slug( wp_get_post_parent_id() ) );
 }
 
+ // Restituisce il formato e le dimensioni di un allegato
+function getFileSizeAndFormat($url) {
+    $percorso = parse_url($url);
+    $percorso = isset($percorso["path"]) ? substr($percorso["path"], 0, -strlen(pathinfo($url, PATHINFO_BASENAME))) : '';
+    $response = wp_remote_head($url);
+
+    if (is_wp_error($response)) {
+        return 'Errore nel recupero delle informazioni del file';
+    }
+
+    $headers = wp_remote_retrieve_headers($response);
+    $content_length = isset($headers['content-length']) ? intval($headers['content-length']) : 0;
+
+    $base = log($content_length, 1024);
+    $suffixes = array('', 'Kb', 'Mb', 'Gb', 'Tb');
+    $size_formatted = round(pow(1024, $base - floor($base)), 2) . ' ' . $suffixes[floor($base)];
+
+    $info_file = pathinfo($url);
+    $file_format = strtoupper(isset($info_file['extension']) ? $info_file['extension'] : '');
+
+    return $file_format . ' ' . $size_formatted;
+}
+
+
+
+
 /**
  * Genera un PDF dal contenuto della pagina e lo salva nella directory wp-content/uploads/pdf_generati
  *
@@ -327,13 +353,12 @@ function dci_salva_urn_normativa_regionale($post_id, $post, $update) {
     // Verifica dei permessi
     if (!current_user_can('edit_post', $post_id)) return;
 
-    // Assicurati che i tuoi campi siano impostati
     $tipo_atto = isset($_POST['_dci_tipo_atto']) ? $_POST['_dci_tipo_atto'] : '';
     $data_emissione = isset($_POST['_dci_data_emissione']) ? $_POST['_dci_data_emissione'] : '';
     $numero_atto = isset($_POST['_dci_numero_atto']) ? $_POST['_dci_numero_atto'] : '';
     $autorita_emittente = isset($_POST['_dci_autorita_emittente']) ? $_POST['_dci_autorita_emittente'] : '';
 
-    // Crea l'URN. Adatta questa logica in base alle tue esigenze specifiche.
+    // Crea l'URN. 
     $urn = "urn:nir:regione:" . sanitize_title($autorita_emittente) . ":" . sanitize_title($tipo_atto) . ":" . date('Y-m-d', strtotime($data_emissione)) . ":" . sanitize_text_field($numero_atto);
 
     // Salva l'URN come metadato del post
@@ -345,6 +370,10 @@ function aggiungi_query_var_personalizzate($vars) {
     return $vars;
 }
 add_filter('query_vars', 'aggiungi_query_var_personalizzate');
+
+
+
+
 
 
 
@@ -382,3 +411,181 @@ function gestisci_richiesta_urn_custom() {
         }
     }
 }
+
+
+
+
+// Definisci una funzione per ottenere i metadata personalizzati dei post
+function get_custom_post_metadata() {
+    global $wpdb;
+    
+    $query = "SELECT post_id,
+                     MAX(CASE WHEN meta_key = '_dci_notizia_immagine_id' THEN meta_value END) AS image_id,
+                     MAX(CASE WHEN meta_key = '_dci_notizia_immagine' THEN meta_value END) AS image_url,
+                     MAX(CASE WHEN meta_key = '_dci_notizia_descrizione_breve' THEN meta_value END) AS description,
+                     MAX(CASE WHEN meta_key = '_dci_notizia_data_pubblicazione' THEN meta_value END) AS publication_date,
+                     MAX(CASE WHEN meta_key = '_dci_notizia_data_scadenza' THEN meta_value END) AS expiration_date,
+                     MAX(CASE WHEN meta_key = '_dci_notizia_testo_completo' THEN meta_value END) AS full_text
+              FROM {$wpdb->prefix}postmeta
+              GROUP BY post_id";
+    $results = $wpdb->get_results($query, ARRAY_A);
+
+    // Rimuovi le stringhe HTML, le classi delle div e i caratteri di nuova riga dal campo full_text
+    foreach ($results as &$result) {
+        if (isset($result['full_text'])) {
+            $result['full_text'] = strip_tags($result['full_text']); // Rimuovi le stringhe HTML
+            $result['full_text'] = preg_replace('/<div[^>]*>/', '', $result['full_text']); // Rimuovi le div aperte
+            $result['full_text'] = preg_replace('/<\/div>/', '', $result['full_text']); // Rimuovi le div chiuse
+            $result['full_text'] = str_replace("\n", "", $result['full_text']); // Rimuovi i caratteri di nuova riga
+			$result['full_text'] = str_replace("\r", "", $result['full_text']); // Rimuovi i caratteri di ritorno a capo
+            $result['full_text'] = str_replace("\r\n", "", $result['full_text']); // Rimuovi i caratteri di ritorno a capo e nuova riga consecutivi
+            $result['full_text'] = str_replace("\r\r", "", $result['full_text']); // Rimuovi i caratteri di ritorno a capo consecutivi
+            $result['full_text'] = str_replace("\n\n", "", $result['full_text']); // Rimuovi i caratteri di nuova riga consecutivi
+			$result['full_text'] = str_replace("\r\n\r\n", "", $result['full_text']); // Rimuovi i caratteri di nuova riga consecutivi
+			$result['full_text'] = str_replace("\r\n\r\n", "", $result['full_text']); // Rimuovi i caratteri di nuova riga consecutivi
+			            $result['full_text'] = strip_tags($result['full_text']); // Rimuovi le stringhe HTML
+            $result['full_text'] = preg_replace('/<div[^>]*>/', '', $result['full_text']); // Rimuovi le div aperte
+            $result['full_text'] = preg_replace('/<\/div>/', '', $result['full_text']); // Rimuovi le div chiuse
+            $result['full_text'] = str_replace("\n", "", $result['full_text']); // Rimuovi i caratteri di nuova riga
+			$result['full_text'] = str_replace("\r", "", $result['full_text']); // Rimuovi i caratteri di ritorno a capo
+            $result['full_text'] = str_replace("\r\n", "", $result['full_text']); // Rimuovi i caratteri di ritorno a capo e nuova riga consecutivi
+            $result['full_text'] = str_replace("\r\r", "", $result['full_text']); // Rimuovi i caratteri di ritorno a capo consecutivi
+            $result['full_text'] = str_replace("\n\n", "", $result['full_text']); // Rimuovi i caratteri di nuova riga consecutivi
+			$result['full_text'] = str_replace("\r\n\r\n", "", $result['full_text']); // Rimuovi i caratteri di nuova riga consecutivi
+			
+
+
+        }
+    }
+
+    // Filtra i risultati per rimuovere quelli con tutti i campi null (eccetto "post_id")
+    $filtered_results = array_filter($results, function($item) {
+        // Rimuovi il campo "post_id" dalla valutazione
+        unset($item['post_id']);
+        // Verifica se tutti gli altri campi sono nulli
+        return !empty(array_filter($item));
+    });
+	
+	
+
+
+
+    // Restituisci i risultati filtrati
+    return $filtered_results;
+}
+
+// Registra una route per l'API
+add_action('rest_api_init', function () {
+    register_rest_route('api', '/documenti', array(
+        'methods' => 'GET',
+        'callback' => 'get_custom_post_metadata',
+    ));
+});
+
+
+// ricerca su notizie
+// Avvia la sessione
+session_start();
+
+// Funzione per impostare gli argomenti selezionati nella sessione
+function set_selected_argomenti($argomenti_selected) {
+    $_SESSION['selected_argomenti'] = $argomenti_selected;
+}
+
+// Funzione per ottenere gli argomenti selezionati dalla sessione
+function get_selected_argomenti() {
+    return isset($_SESSION['selected_argomenti']) ? $_SESSION['selected_argomenti'] : '';
+}
+
+
+
+
+
+
+
+
+
+
+// Assicuriamoci che il codice venga eseguito correttamente
+error_log("Il codice sta per essere eseguito.");
+
+// Controllo se la tabella esiste già
+global $wpdb;
+$table_name = $wpdb->prefix . 'servizi_uau';
+
+if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name) {
+    // La tabella non esiste, quindi la creiamo
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name (
+        id mediumint(9) NOT NULL AUTO_INCREMENT,
+        titolo varchar(255) NOT NULL,
+        url varchar(255) NOT NULL,
+        ente varchar(255) NOT NULL,
+        areaTematica varchar(255) NOT NULL,
+        materie text NOT NULL,
+        uffici varchar(255) NOT NULL,
+        dataPrimaPubblicazione datetime NOT NULL,
+        dataUltimoAggiornamento datetime NOT NULL,
+        stato varchar(255) NOT NULL,
+        visualizzazioni mediumint(9) NOT NULL,
+        PRIMARY KEY  (id)
+    ) $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+    dbDelta($sql);
+
+    // Aggiungiamo un messaggio di debug
+    error_log("La tabella è stata creata con successo.");
+} else {
+    // La tabella esiste già
+    // Aggiungiamo un messaggio di debug
+    error_log("La tabella esiste già.");
+}
+
+// Funzione per popolare la tabella servizi-uau con i dati dall'API primaria
+function populate_servizi_uau_table() {
+    global $wpdb;
+
+    // URL dell'API
+    $api_url = 'https://accessounico.regione.umbria.it/api/report/export';
+
+    // Esegue la richiesta all'API
+    $response = wp_remote_get($api_url);
+
+    // Verifica se la richiesta è andata a buon fine
+    if (!is_wp_error($response)) {
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body);
+
+        // Verifica se ci sono dati nella risposta
+        if (!empty($data)) {
+            $table_name = $wpdb->prefix . 'servizi_uau';
+
+            // Cicla sui dati e inserisce ogni record nella tabella
+            foreach ($data as $item) {
+                // Verifica se l'ente è uguale a "Regione Umbria"
+                if ($item->ente === "Regione Umbria") {
+                    $wpdb->insert(
+                        $table_name,
+                        array(
+                            'titolo' => $item->titolo,
+                            'url' => $item->url,
+                            'ente' => $item->ente,
+                            'areaTematica' => $item->areaTematica,
+                            'uffici' => $item->uffici,
+                            'dataPrimaPubblicazione' => $item->dataPrimaPubblicazione,
+                            'dataUltimoAggiornamento' => $item->dataUltimoAggiornamento,
+                            'stato' => $item->stato,
+                            'visualizzazioni' => $item->visualizzazioni,
+                        )
+                    );
+                }
+            }
+        }
+    }
+}
+
+
+
+

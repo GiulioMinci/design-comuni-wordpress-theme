@@ -278,4 +278,3 @@ function dci_get_all_values($array,$key){
     }
     return $result;
 }
-

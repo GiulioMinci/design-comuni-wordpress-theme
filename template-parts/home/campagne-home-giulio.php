@@ -10,7 +10,7 @@ $query = isset($_GET['search']) ? dci_removeslashes($_GET['search']) : null;
 $args = array(
     's'         => $query,
     'post_type' => 'notizia',
-    'posts_per_page' => -1 // Mostra tutti i post senza limiti
+    'posts_per_page' => -1 
 );
 
 $the_query = new WP_Query($args);
@@ -19,7 +19,10 @@ $the_query = new WP_Query($args);
 if ($the_query->have_posts()) :
     while ($the_query->have_posts()) : $the_query->the_post();
         $img = dci_get_meta('immagine');
-        if ($img) {
+        $campagne_di_comunicazione = get_post_meta(get_the_ID(), '_dci_notizia_campagne_di_comunicazione', true);
+        
+        // Verifica se la checkbox "Campagne di comunicazione" è selezionata
+        if ($img && $campagne_di_comunicazione == 'on') {
             $images[] = $img;
             $titles[] = get_the_title();
             $links[] = get_permalink(); // Ottieni il link alla pagina della notizia

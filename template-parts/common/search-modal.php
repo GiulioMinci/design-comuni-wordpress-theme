@@ -31,7 +31,10 @@
                     </svg>
                   </button>
                   <h2><?php _e("Cerca","design_comuni_italia"); ?></h2>
-                  <button
+                 
+					
+					
+					<button
                     class="search-link d-none d-md-block"
                     type="button"
                     data-bs-toggle="modal"
@@ -45,6 +48,8 @@
                       ></use>
                     </svg>
                   </button>
+					
+					
                 </div>
                   <div class="form-group">
                     <div class="input-group">

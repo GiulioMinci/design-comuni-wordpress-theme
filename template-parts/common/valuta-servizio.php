@@ -1,6 +1,5 @@
-<div class="bg-primary">
     <div class="container">
-        <div class="row d-flex justify-content-center bg-primary">
+<div class="row d-flex justify-content-center" style="background-color: rgb(255, 255, 255);">
         <div class="col-12 col-lg-6 p-lg-0 px-3">
             <div class="cmp-rating pt-lg-80 pb-lg-80" id="rating">
             <div class="card shadow card-wrapper" data-element="feedback">
@@ -251,4 +250,3 @@
         </div>
         </div>
     </div>
-</div>

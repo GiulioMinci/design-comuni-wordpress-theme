@@ -67,7 +67,7 @@ get_header();
             <div class="container">
                 <div class="row border-top border-light row-column-border row-column-menu-left">
                     <aside class="col-lg-4">
-                        <div class="cmp-navscroll sticky-top" aria-labelledby="accordion-title-one">
+<div class="cmp-navscroll sticky-top" id="navscroll" aria-labelledby="accordion-title-one" style="padding-top: 60px; margin-bottom: 80px; z-index: 1;">
                             <nav class="navbar it-navscroll-wrapper navbar-expand-lg" aria-label="Indice della pagina" data-bs-navscroll>
                                 <div class="navbar-custom" id="navbarNavProgress">
                                     <div class="menu-wrapper">
@@ -244,10 +244,15 @@ get_header();
                         <h4 class="mb-3">Ulteriori informazioni</h4>
                     </article> -->
                     <?php get_template_part('template-parts/single/page_bottom'); ?>
+
                     </section>
                 </div>
             </div>
-            <?php get_template_part("template-parts/common/valuta-servizio"); ?>
+		            <div class="container">
+
+								            <?php get_template_part("template-parts/common/valuta-servizio"); ?>
+            </div>
+
 
         <?php
         endwhile; // End of the loop.
@@ -258,6 +263,7 @@ get_header();
         const wordsNumber = descText.split(' ').length
         document.querySelector('#readingTime').innerHTML = `${Math.ceil(wordsNumber / 200)} min`;
     </script>
+
 <?php
 get_footer();
 

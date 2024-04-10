@@ -37,7 +37,7 @@ function dci_register_pagina_argomenti_options(){
         'show_option_none' => false,
         'remove_default' => 'true',
         'attributes' => array(
-            'data-maximum-selection-length' => '8',
+            'data-maximum-selection-length' => '18',
         ),
     ) );
 

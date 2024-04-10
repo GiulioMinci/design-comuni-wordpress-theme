@@ -16,7 +16,11 @@ $tipi_documento = get_terms( array(
 get_header();
 
 ?>
+
 	<main>
+
+		
+		
 		<?php
 		while ( have_posts() ) :
 			the_post();
@@ -26,6 +30,48 @@ get_header();
 				$with_shadow = true;
 				get_template_part("template-parts/hero/hero"); 
 			?>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	
+		
+		
+		
+		
+		
+	
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+			<?php get_template_part("template-parts/documento/cerca-bandi.php"); ?>
+
 			<?php get_template_part("template-parts/documento/evidenza"); ?>
 			<?php get_template_part("template-parts/documento/tutti-documenti"); ?>
 			<?php get_template_part("template-parts/documento/categorie"); ?>

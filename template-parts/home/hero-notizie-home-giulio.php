@@ -1,8 +1,14 @@
 <?php
 // Recupera tutte le notizie
 $args = array(
-    'post_type' => 'notizia', // Tipo di post notizia
+    'post_type'      => 'notizia', // Tipo di post notizia
     'posts_per_page' => 3, // Numero di notizie da mostrare (1 iniziale + 2 sotto)
+    'meta_query'     => array(
+        array(
+            'key'     => '_dci_notizia_notizia_in_evidenza',
+            'compare' => 'EXISTS', // Controlla se il campo esiste
+        ),
+    ),
 );
 
 $notizie_query = new WP_Query($args);
