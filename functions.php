@@ -238,7 +238,7 @@ function add_menu_link_class( $atts, $item, $args ) {
 		$slice = $args->li_slice;
 		$items = array();
 		foreach($sorted_menu_items as $item){
-			if($item->menu_item_parent != 0) continue;
+			if($item->menu_item_parent != 6) continue;
 			$items[] = $item;
 		}
 		$items = array_slice($items, $slice[0], $slice[1]);
